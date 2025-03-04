@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+
+
+\begin{document}
+\section{Bayesian Belief Network}
+\subsection{Procedure:}
+\begin{enumerate}
+  \item Read the CSV file and clean the data by getting only the columns which contain the data required to build the Bayesian Network.
+  \begin{enumerate}
+    \item Each node in the network has 4-5 questions and each question has a rating from 1 to 5
+    \item Take the average of the ratings for each node and round it to the nearest integer.
+    \item Return only the nodes and the average ratings for each student in form of a Pandas DataFrame.
+  \end{enumerate}
+  \item  Create the graph as mentioned in the paper, add it in the Bayesian Network.
+  \item Calculate the conditional probabilities for each of the nodes.
+  \begin{enumerate}
+    \item Network nodes can be divided into two categories:
+    \begin{enumerate}
+      \item \textbf{Root Nodes} : Nodes which do not have a parent node.
+      \item \textbf{Child Nodes} : nodes which have atelast one parent node.
+    \end{enumerate}
+    \item Consider each node corresponds to a random variable ($X$) where $X$ takes values from 1 to 5 ($X\in[1,5]$).  
+    \item To calculate the probability for the root nodes:
+    \begin{enumerate}
+      \item $\Pr_X(x=k)$ is defined as the probability that the variable $X$ takes the value $k$. 
+      \item The numerator is calculated as the number of rows having value or $X$ as $k$, i.e., number of rows with average rating equal to $k$ for the given node.
+      \item The denominator would contain the total number of nodes.
+      \item $$\Pr_X(x=k) = \frac{\text{rows with rating = k}}{\text{total number of rows}}$$ \label{eq:root}
+    \end{enumerate}
+    \item To calculate the probability for the child nodes:
+    \begin{enumerate}
+      \item $\Pr_{X|Y}(x=k|y=l)$ is defined as the probability that $X$ takes the value $k$ given that $Y$ has the value $l$. In our case, as we can have multiple parents to the given node, $Y$ can denote a tuple of all the parent nodes and $l$ denotes a tuple of all its values.
+      \item The numerator is defined as the number of rows where $X$ has value $k$ and $Y$ has value $l$, i.e., the number of rows which have the rating of the node as $k$ and rating of the parent nodes as the tuple $l$
+      \item The denominator is defined as the number of rows where value of $Y$ is $l$, i.e., the number of rows with rating of all the nodes mentioned in $Y$ as $l$.
+      \item $$\Pr_{X|Y}(x=k|y=l) = \frac{\text{rows with rating of node and parent nodes = k and l respectively}}{\text{total number of rows with ratings of parent nodes = l}}$$ \label{eq:child}
+    \end{enumerate}
+  \end{enumerate}
+  \item Adding the Bayesian check:
+  \begin{enumerate}
+    \item As we can have atuple which does not occur in any of the rows, then the probability (as mentioned in \ref{eq:root}, \ref{eq:child}) would be undefined. We mention a uniform probability in this case i.e. $\frac{1}{5}$.
+  \end{enumerate}
+\end{enumerate}
+\end{document}
